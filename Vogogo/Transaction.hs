@@ -6,7 +6,6 @@ import Data.Aeson ((.=))
 import qualified Data.Aeson as Aeson
 import qualified Data.Text as T
 
-import Vogogo.Customer
 import Vogogo.Internal
 
 data EFT = EFT UUID UUID Double ISO4217Currency

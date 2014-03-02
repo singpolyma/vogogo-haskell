@@ -1,0 +1,48 @@
+name:            vogogo
+version:         0.1
+cabal-version:   >= 1.8
+license:         OtherLicense
+license-file:    COPYING
+category:        Crypto
+copyright:       © 2014 Stephen Paul Weber
+author:          Stephen Paul Weber <singpolyma@singpolyma.net>
+maintainer:      Stephen Paul Weber <singpolyma@singpolyma.net>
+stability:       experimental
+tested-with:     GHC == 7.4.1
+synopsis:        Vogogo API wrapper
+homepage:        https://github.com/singpolyma/vogogo-haskell
+bug-reports:     https://github.com/singpolyma/vogogo-haskell/issues
+build-type:      Simple
+description:
+        To interact with the Vogogo invoicing and payment service.
+
+extra-source-files:
+        README
+
+library
+        exposed-modules:
+                Vogogo
+                Vogogo.Account
+                Vogogo.Customer
+                Vogogo.Transaction
+
+        other-modules:
+                Vogogo.Internal
+
+        build-depends:
+                base == 4.*,
+                bytestring,
+                text,
+                aeson,
+                errors,
+                blaze-builder,
+                currency,
+                network,
+                http-types,
+                http-streams,
+                io-streams,
+                unexceptionalio
+
+source-repository head
+        type:     git
+        location: git://github.com/singpolyma/vogogo-haskell.git
