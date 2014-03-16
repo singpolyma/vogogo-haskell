@@ -1,8 +1,10 @@
 module Vogogo.Transaction (sendEFT) where
 
+import Control.Monad (when)
 import Currency (ISO4217Currency)
-import Network.URI (URI(..))
 import Data.Aeson ((.=))
+import Control.Error (EitherT(..), throwT, runEitherT)
+import Network.Http.Client (getStatusCode)
 import qualified Data.Aeson as Aeson
 import qualified Data.Text as T
 
@@ -24,6 +26,9 @@ sendEFT ::
 	-> UUID   -- ^ To account
 	-> Double -- ^ Amount
 	-> ISO4217Currency
-	-> IO (Either APIError URI)
-sendEFT auth from to amount currency = create "customer_account/" auth $
-	EFT from to amount currency
+	-> IO (Either APIError ())
+sendEFT auth from to amount currency = runEitherT $ do
+	resp <- EitherT $ post (apiCall "credit/") (basicAuth auth)
+		(EFT from to amount currency)
+		(const . return . statusCodeHandler)
+	when (getStatusCode resp /= 201) $ throwT APIParseError
