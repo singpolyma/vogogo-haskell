@@ -19,7 +19,7 @@ instance Aeson.ToJSON EFT where
 		]
 
 sendEFT ::
-	VogogoAuth
+	Auth
 	-> UUID   -- ^ From account
 	-> UUID   -- ^ To account
 	-> Double -- ^ Amount

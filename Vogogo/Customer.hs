@@ -26,5 +26,5 @@ instance Aeson.ToJSON Account where
 			T.pack "currency"           .= show currency
 		]
 
-createAccount :: VogogoAuth -> Account -> IO (Either APIError URI)
+createAccount :: Auth -> Account -> IO (Either APIError URI)
 createAccount = create "customer_account/"

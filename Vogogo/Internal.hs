@@ -30,10 +30,10 @@ newtype UUID = UUID String deriving (Eq)
 instance Show UUID where
 	show (UUID s) = show s
 
-data VogogoAuth = VogogoAuth String String String
+data Auth = Auth String String String
 
-basicAuth :: VogogoAuth -> RequestBuilder ()
-basicAuth (VogogoAuth user key token) =
+basicAuth :: Auth -> RequestBuilder ()
+basicAuth (Auth user key token) =
 	setAuthorizationBasic (BS8.pack user) (BS8.pack $ key ++ ":" ++ token)
 
 newtype VogogoResponseList a = VogogoResponseList [a]
@@ -45,7 +45,7 @@ instance (Aeson.FromJSON a) => Aeson.FromJSON (VogogoResponseList a) where
 	parseJSON (Aeson.Object o) = VogogoResponseList <$> o .: T.pack "objects"
 	parseJSON _ = fail "Vogogo response is always an object"
 
-create :: (Aeson.ToJSON a) => String -> VogogoAuth -> a -> IO (Either APIError URI)
+create :: (Aeson.ToJSON a) => String -> Auth -> a -> IO (Either APIError URI)
 create path auth x = runEitherT $ do
 	resp <- EitherT $ post (apiCall path) (basicAuth auth) x
 		(const . return . statusCodeHandler)

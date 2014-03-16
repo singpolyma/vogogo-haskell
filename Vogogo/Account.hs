@@ -29,7 +29,7 @@ instance Aeson.FromJSON Account where
 			_ -> fail "Unknown Vogogo account_type"
 	parseJSON _ = fail "Vogogo Account is always represented by a JSON object"
 
-getWallet :: VogogoAuth -> IO (Either APIError UUID)
+getWallet :: Auth -> IO (Either APIError UUID)
 getWallet auth = runEitherT $ do
 	accounts <- EitherT $ getAccounts auth
 	uuid <$> noteT APINotFoundError (hoistMaybe $ find isWallet accounts)
@@ -37,7 +37,7 @@ getWallet auth = runEitherT $ do
 	isWallet (Wallet {}) = True
 	isWallet _           = False
 
-getAccounts :: VogogoAuth -> IO (Either APIError [Account])
+getAccounts :: Auth -> IO (Either APIError [Account])
 getAccounts auth = (fmap.fmap) (getVogogoResponseList . snd) $
 	oneShotHTTP HttpStreams.GET (apiCall "account/")
 	(setContentLength 0 >> basicAuth auth) emptyBody
