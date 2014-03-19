@@ -1,5 +1,6 @@
 module Vogogo.Transaction (sendEFT) where
 
+import Data.Fixed (Centi)
 import Control.Monad (when)
 import Currency (ISO4217Currency)
 import Data.Aeson ((.=))
@@ -10,7 +11,7 @@ import qualified Data.Text as T
 
 import Vogogo.Internal
 
-data EFT = EFT UUID UUID Double ISO4217Currency
+data EFT = EFT UUID UUID Centi ISO4217Currency
 
 instance Aeson.ToJSON EFT where
 	toJSON (EFT (UUID from) (UUID to) amount currency) = Aeson.object [
@@ -22,9 +23,9 @@ instance Aeson.ToJSON EFT where
 
 sendEFT ::
 	Auth
-	-> UUID   -- ^ From account
-	-> UUID   -- ^ To account
-	-> Double -- ^ Amount
+	-> UUID  -- ^ From account
+	-> UUID  -- ^ To account
+	-> Centi -- ^ Amount
 	-> ISO4217Currency
 	-> IO (Either APIError ())
 sendEFT auth from to amount currency = runEitherT $ do
